@@ -1,0 +1,16 @@
+{
+
+    "configurations": [
+        
+        {
+            "name": "WeatherApp",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--dart-define",
+                "open_weather_app_token=YOUR_API_KEY"
+            ]
+        },
+    ]
+}
