@@ -8,10 +8,10 @@ The weather app fetches weather data from open weather api.
 The user enters preferred city name and the current weather information is displayed on the screen. 
 
 ## Configuring the app
-To get your key, sign up at [OpenWeather](https://openweathermap.org "Open weather home"), then go to My API keys page and click
+Sign up at [OpenWeather](https://openweathermap.org "Open weather home"), then go to My API keys page and click
 Generate API Key. 
 
-Storing Your API Key in a Compile-time Variable
+### Storing Your API Key in a Compile-time Variable
 
 Using the command line:
 
