@@ -1,4 +1,4 @@
-# weather_app
+# city_weather_app
 
 Weather app is a simple app that undergoes what real world app goes through. It is built with
 a clean architecture, repository design pattern and bloc state management.
