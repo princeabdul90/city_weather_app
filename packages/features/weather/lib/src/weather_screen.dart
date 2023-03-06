@@ -87,12 +87,17 @@ class SearchWeather extends StatefulWidget {
 
 class _SearchWeatherState extends State<SearchWeather> {
   TextEditingController cityController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 
   String? errortext;
 
   void onSearchCity() {
-    context.read<WeatherCubit>().fetchWeather(cityController.text);
-    cityController.clear();
+    if (_formKey.currentState!.validate()) {
+      context.read<WeatherCubit>().fetchWeather(cityController.text);
+      cityController.clear();
+    }
+
   }
 
   @override
@@ -107,37 +112,49 @@ class _SearchWeatherState extends State<SearchWeather> {
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
       child: SizedBox(
         height: 45,
-        child: Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: cityController,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: const InputDecoration(
-                  labelText: 'City Name',
-                  hintText: 'enters more than 2 characters',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        child: Form(
+          key: _formKey,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: cityController,
+                  textAlignVertical: TextAlignVertical.bottom,
+                  validator: (value){
+                    if(value!.isEmpty){
+                      return 'please enter city name';
+                    }else if(value.length <= 2){
+                      return 'invalid city name';
+                    }else{
+                      return null;
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'City Name',
+                    hintText: 'enters more than 2 characters',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            MaterialButton(
-              onPressed: () {
-                onSearchCity();
-              },
-              height: 40,
-              color: Colors.indigo,
-              child: const Text(
-                'Submit',
-                style: TextStyle(color: Colors.white),
+              const SizedBox(
+                width: 5,
               ),
-            )
-          ],
+              MaterialButton(
+                onPressed: () {
+                  onSearchCity();
+                },
+                height: 40,
+                color: Colors.indigo,
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
