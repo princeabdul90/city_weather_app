@@ -62,7 +62,11 @@ replace YOUR_API_KEY with your actual key from [OpenWeather](https://openweather
 
 Open the project in your preferred IDE. Then, fetch the project’s dependencies by using the terminal to
 run make get from the root directory.
-- make get 
+```
+   make get 
+```
 
 ## Run App
+```
 - flutter run
+```
