@@ -14,8 +14,9 @@ Generate API Key.
 ### Storing Your API Key in a Compile-time Variable
 
 Using the command line:
-
-- flutter run --dart-define=open_weather_app_token=YOUR_API_KEY
+```
+ flutter run --dart-define=open_weather_app_token=YOUR_API_KEY
+```
 
 To configure your IDE to handle your dart-define for you so you don’t have to specify the key every time.
 
