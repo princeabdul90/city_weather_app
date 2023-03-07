@@ -17,11 +17,11 @@ class WeatherCubit extends Cubit<WeatherState> {
     try {
       final Weather weather = await weatherRepository.getWeather(city);
       emit(state.copyWith(status: WeatherStatus.success, weather: weather));
-      print('state: $state');
+      //print('state: $state');
 
     }catch (e) {
       emit(state.copyWith(status: WeatherStatus.error, error: e.toString()));
-      print('state: $state');
+      //print('state: $state');
     }
   }
 

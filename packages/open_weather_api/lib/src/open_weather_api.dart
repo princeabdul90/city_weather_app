@@ -53,10 +53,10 @@ class OpenWeatherApi {
       if (response.statusCode != 200) {
         throw StatusCodeErrorException();
       }
-
       final jsonObject = response.data;
 
       final weatherResult = WeatherRM.fromJson(jsonObject);
+      print('Lat: ${weatherResult.main}, Datetime: ${weatherResult.dt}');
       return weatherResult;
     } catch (e) {
       rethrow;
