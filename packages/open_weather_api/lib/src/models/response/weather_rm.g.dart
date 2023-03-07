@@ -13,4 +13,5 @@ WeatherRM _$WeatherRMFromJson(Map<String, dynamic> json) => WeatherRM(
           ?.map((e) => e as Map<String, dynamic>)
           .toList(),
       main: json['main'] as Map<String, dynamic>?,
+      dt: json['dt'] as int?,
     );

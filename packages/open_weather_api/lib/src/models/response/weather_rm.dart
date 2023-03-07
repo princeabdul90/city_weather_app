@@ -15,6 +15,7 @@ class WeatherRM {
   final String? country;
   final List<Map>? weather;
   final Map? main;
+  final int ? dt;
 
 
   const WeatherRM({
@@ -22,6 +23,7 @@ class WeatherRM {
     this.country,
     this.weather,
     this.main,
+    this.dt,
   });
 
   factory WeatherRM.fromJson(Map<String, dynamic> json) =>
@@ -32,12 +34,14 @@ class WeatherRM {
     String? country,
     List<Map>? weather,
     Map? main,
+    int? dt,
   }) {
     return WeatherRM(
       name: name ?? this.name,
       country: country ?? this.country,
       weather: weather ?? this.weather,
       main: main ?? this.main,
+      dt: dt ?? this.dt,
     );
   }
 }
