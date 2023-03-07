@@ -46,120 +46,146 @@ class WeatherView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Weather App'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                 onTappedSetting();
-              },
-              icon: const Icon(Icons.settings))
-        ],
-      ),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            SearchWeather(),
-            SizedBox(height: 20),
-            WeatherDisplay(),
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                '©2023. Built with 💜💜 by Abdul',
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
+    return GestureDetector(
+      onTap: () => _releaseFocus(context),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Weather App'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                   onTappedSetting();
+                },
+                icon: const Icon(Icons.settings))
           ],
         ),
-      ),
-    );
-  }
-}
-
-class SearchWeather extends StatefulWidget {
-  const SearchWeather({Key? key}) : super(key: key);
-
-  @override
-  State<SearchWeather> createState() => _SearchWeatherState();
-}
-
-class _SearchWeatherState extends State<SearchWeather> {
-  TextEditingController cityController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-
-  String? errortext;
-
-  void onSearchCity() {
-    if (_formKey.currentState!.validate()) {
-      context.read<WeatherCubit>().fetchWeather(cityController.text);
-      cityController.clear();
-    }
-
-  }
-
-  @override
-  void dispose() {
-    cityController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-      child: SizedBox(
-        height: 45,
-        child: Form(
-          key: _formKey,
-          child: Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: cityController,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  validator: (value){
-                    if(value!.isEmpty){
-                      return 'please enter city name';
-                    }else if(value.length <= 2){
-                      return 'invalid city name';
-                    }else{
-                      return null;
-                    }
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'City Name',
-                    hintText: 'enters more than 2 characters',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                  ),
+        body: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              CitySearchForm(),
+              SizedBox(height: 20),
+              WeatherDisplay(),
+              Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  '©2023. Built with 💜💜 by Abdul',
+                  style: TextStyle(fontSize: 12),
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              MaterialButton(
-                onPressed: () {
-                  onSearchCity();
-                },
-                height: 40,
-                color: Colors.indigo,
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
             ],
           ),
         ),
       ),
     );
   }
+
+  void _releaseFocus(BuildContext context) => FocusScope.of(context).unfocus();
 }
+
+
+class CitySearchForm extends StatefulWidget {
+  const CitySearchForm({Key? key}) : super(key: key);
+
+  @override
+  State<CitySearchForm> createState() => _CitySearchFormState();
+}
+
+class _CitySearchFormState extends State<CitySearchForm> {
+
+  late FocusNode cityFocusNode;
+  String city = '';
+
+  void onButtonPressed(city){
+    if(city.length > 2){
+      context.read<WeatherCubit>().fetchWeather(city);
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    cityFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    cityFocusNode.dispose();
+    super.dispose();
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.85,
+            height: 50,
+            decoration:  const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                bottomLeft: Radius.circular(25)
+              ),
+              //color: Colors.deepPurpleAccent
+            ),
+            child: Center(
+              child:  TextField(
+                focusNode: cityFocusNode,
+                //autofocus: true,
+                onSubmitted: (String str){
+                  setState(() {
+                    city = str;
+                  });
+                 if(city.length > 2){
+                   context.read<WeatherCubit>().fetchWeather(city);
+                 }
+
+                },
+                decoration:   const InputDecoration(
+                  labelText: 'City Name',
+                  // hintText: 'enters more than 2 characters',
+                  prefixIcon: null,
+                  suffixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     context.read<WeatherCubit>().fetchWeather(city);
+          //   },
+          //
+          //   child: Container(
+          //     width: MediaQuery.of(context).size.width * 0.2,
+          //     height: 50,
+          //     decoration:   BoxDecoration(
+          //         borderRadius: const BorderRadius.only(
+          //             topRight: Radius.circular(25),
+          //             bottomRight: Radius.circular(25)
+          //         ),
+          //         border: Border.all(
+          //             color: Colors.black38,
+          //             width: 1.0),
+          //         color: Colors.deepOrangeAccent
+          //     ),
+          //     child: const Center(child: Text('Search')),
+          //   ),
+          // )
+        ],
+      ),
+    );
+  }
+}
+
 
 class WeatherDisplay extends StatelessWidget {
   const WeatherDisplay({Key? key}) : super(key: key);
