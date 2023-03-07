@@ -10,13 +10,12 @@ extension WeatherRMtoDomain on WeatherRM {
   Weather toDomainModel() {
     return Weather(
         name: name ?? '',
-        description: description ?? '',
         country: country ?? '',
-        icon: icon ?? '',
-        temp: temp,
-        tempMin: tempMin,
-        tempMax: tempMax,
-        //lastUpdated: lastUpdated ?? '',
+        description: weather![0]['description'] as String,
+        icon: weather![0]['icon'] as String,
+        temp: main!['temp'] as double,
+        tempMin: main!['temp_min'] as double,
+        tempMax: main!['temp_max'] as double,
     );
   }
 }

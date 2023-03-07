@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:open_weather_api/open_weather_api.dart';
+import 'package:open_weather_api/src/url_builder.dart';
 
 void main() {
   test('When user enters city name, return an instance of DirectGeoCodingRM',
@@ -14,10 +15,10 @@ void main() {
     final dio = Dio();
     final dioAdapter = DioAdapter(dio: dio);
     final remoteApi = OpenWeatherApi(dio: dio);
+    final url = const UrlBuilder().buildDirectGeoCodingPath('');
 
     dioAdapter.onGet(
-      kGeoCodeHost,
-
+      url,
       (server) => server.reply(
         200,
         {'message': 'Success!'},

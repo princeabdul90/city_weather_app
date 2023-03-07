@@ -5,47 +5,40 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:open_weather_api/src/url_builder.dart';
 
 import 'models/models.dart';
 
-const String kGeoCodeHost = 'https://geocoding-api.open-meteo.com/v1/search';
-const kCount = '1';
-const String kApiHost = 'https://api.openweathermap.org';
-const gPath = '/geo/1.0/direct';
-const kLimit = '1';
-const wPath = '/data/2.5/weather';
-const kUnit = 'metric';
-const _appTokenEnvironmentVariableKey = 'open_weather_app_token';
-const appToken = String.fromEnvironment(_appTokenEnvironmentVariableKey);
 
 class OpenWeatherApi {
   OpenWeatherApi({
     @visibleForTesting Dio? dio,
-  }) : _dio = dio ?? Dio() {
+    @visibleForTesting UrlBuilder? urlBuilder,
+  }) : _dio = dio ?? Dio(),
+    _urlBuilder = urlBuilder ?? const UrlBuilder() {
     _dio.interceptors.add(LogInterceptor(responseBody: false));
   }
 
   final Dio _dio;
+  final UrlBuilder _urlBuilder;
 
   Future<DirectGeoCodingRM> getDirectGeoCoding(String city) async {
+
+    final url = _urlBuilder.buildDirectGeoCodingPath(city);
     try {
-      final response = await _dio.get(kGeoCodeHost, queryParameters: {
-        'name': city,
-        'count': kCount,
-      });
+      final response = await _dio.get(url);
 
       if (response.statusCode != 200) {
         throw StatusCodeErrorException();
       }
 
       final jsonObject = response.data;
-      final result = jsonObject['results'][0];
 
-      if (result == null) {
+      if (jsonObject == null) {
         throw EmptySearchResultException();
       }
 
-      final directGeoCoding = DirectGeoCodingRM.fromJson(result);
+      final directGeoCoding = DirectGeoCodingRM.fromJson(jsonObject);
       return directGeoCoding;
     } catch (e) {
       rethrow;
@@ -53,32 +46,17 @@ class OpenWeatherApi {
   }
 
   Future<WeatherRM> getWeather(double latitude, double longitude) async {
+    final url = _urlBuilder.buildWeatherPath(longitude, latitude);
     try {
-      final response = await _dio.get('$kApiHost$wPath', queryParameters: {
-        'lat': latitude,
-        'lon': longitude,
-        'units': kUnit,
-        'appid': appToken
-      });
-
+      final response = await _dio.get(url);
 
       if (response.statusCode != 200) {
         throw StatusCodeErrorException();
       }
 
       final jsonObject = response.data;
-      final weather = jsonObject['weather'][0];
-      final main = jsonObject['main'];
 
-      Map<String, dynamic> json = {
-        'description': weather['description'],
-        'icon': weather['icon'],
-        'temp': main['temp'],
-        'temp_min': main['temp_min'],
-        'temp_max': main['temp_max'],
-      };
-
-      final weatherResult = WeatherRM.fromJson(json);
+      final weatherResult = WeatherRM.fromJson(jsonObject);
       return weatherResult;
     } catch (e) {
       rethrow;

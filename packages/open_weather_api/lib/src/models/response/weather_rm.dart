@@ -11,54 +11,33 @@ part 'weather_rm.g.dart';
 
 @JsonSerializable(createToJson: false)
 class WeatherRM {
+  final String? name;
+  final String? country;
+  final List<Map>? weather;
+  final Map? main;
+
 
   const WeatherRM({
     this.name,
-    this.description,
     this.country,
-    this.icon,
-    required this.temp,
-    required this.tempMin,
-    required this.tempMax,
-    // required this.lastUpdated,
-
+    this.weather,
+    this.main,
   });
 
-  final String? name;
-  final String? description;
-  final String? country;
-  final String? icon;
-  final double temp;
-  @JsonKey(name: 'temp_min')
-  final double tempMin;
-  @JsonKey(name: 'temp_max')
-  final double tempMax;
-  // @EpochDateTimeConverter()
-  // final DateTime? lastUpdated;
-
-
-
-  factory WeatherRM.fromJson(Map<String, dynamic> json) => _$WeatherRMFromJson(json);
+  factory WeatherRM.fromJson(Map<String, dynamic> json) =>
+      _$WeatherRMFromJson(json);
 
   WeatherRM copyWith({
     String? name,
-    String? description,
     String? country,
-    String? icon,
-    double? temp,
-    double? tempMin,
-    double? tempMax,
-   // DateTime? lastUpdated
+    List<Map>? weather,
+    Map? main,
   }) {
     return WeatherRM(
       name: name ?? this.name,
-      description: description ?? this.description,
       country: country ?? this.country,
-      icon: icon ?? this.icon,
-      temp: temp ?? this.temp,
-      tempMin: tempMin ?? this.tempMin,
-      tempMax: tempMax ?? this.tempMax,
-      // lastUpdated: lastUpdated ?? this.lastUpdated,
+      weather: weather ?? this.weather,
+      main: main ?? this.main,
     );
   }
 }

@@ -5,22 +5,30 @@
 
 import 'package:json_annotation/json_annotation.dart';
 
-part 'direct_geo_coding_rm.g.dart';
-
-@JsonSerializable(createToJson: false)
+// part 'direct_geo_coding_rm.g.dart';
+//
+// @JsonSerializable(createToJson: false)
 class DirectGeoCodingRM {
-
   final String name;
   final String country;
-  final double longitude;
-  final double latitude;
+  final double lon;
+  final double lat;
 
   const DirectGeoCodingRM({
     required this.name,
     required this.country,
-    required this.longitude,
-    required this.latitude,
+    required this.lon,
+    required this.lat,
   });
 
-  factory DirectGeoCodingRM.fromJson(Map<String, dynamic> json) => _$DirectGeoCodingRMFromJson(json);
+  factory DirectGeoCodingRM.fromJson(List json) {
+    final Map<String, dynamic> data = json[0];
+
+    return DirectGeoCodingRM(
+      name: data['name'] as String,
+      country: data['country'] as String,
+      lat: data['lat'] as double,
+      lon: data['lon'] as double,
+    );
+  }
 }

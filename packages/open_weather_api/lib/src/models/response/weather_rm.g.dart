@@ -8,10 +8,9 @@ part of 'weather_rm.dart';
 
 WeatherRM _$WeatherRMFromJson(Map<String, dynamic> json) => WeatherRM(
       name: json['name'] as String?,
-      description: json['description'] as String?,
       country: json['country'] as String?,
-      icon: json['icon'] as String?,
-      temp: (json['temp'] as num).toDouble(),
-      tempMin: (json['temp_min'] as num).toDouble(),
-      tempMax: (json['temp_max'] as num).toDouble(),
+      weather: (json['weather'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
+      main: json['main'] as Map<String, dynamic>?,
     );

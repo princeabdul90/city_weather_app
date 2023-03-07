@@ -17,7 +17,7 @@ class WeatherRepository {
   Future<Weather> getWeather(String city) async {
     try {
       final directGeoCoding = await openWeatherApi.getDirectGeoCoding(city);
-      final weatherTemp = await openWeatherApi.getWeather(directGeoCoding.latitude, directGeoCoding.longitude);
+      final weatherTemp = await openWeatherApi.getWeather(directGeoCoding.lat, directGeoCoding.lon);
 
       final weather = weatherTemp.copyWith(
         name: directGeoCoding.name,
